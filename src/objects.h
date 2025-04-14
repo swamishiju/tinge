@@ -3,6 +3,7 @@
 #include "frame.h"
 #include "material.h"
 #include "math.h"
+#include "texture.h"
 #include <memory>
 #include <utility>
 #include <vector>
@@ -17,6 +18,8 @@ struct IntersectionOut {
     Vec3 point;  /**< Point of intersection of the light ray*/
     Ray w0;
     mat_pointer hit_mat;
+    std::pair<float, float> uv{0, 0};
+    Vec3 uv_dat{1};
     IntersectionOut();
 };
 
@@ -26,6 +29,7 @@ struct IntersectionOut {
 struct AbstractShape {
     Frame frame; /**< Frame of the object*/
     mat_pointer material;
+    tex_pointer texture;
     /***************************************************
      * @brief Common intersection routine for all shapes
      * @param ray Light ray to check in world space
@@ -33,6 +37,7 @@ struct AbstractShape {
      ***************************************************/
     IntersectionOut intersect(const Ray &ray);
     Vec3 get_normal(const Vec3 &point);
+    void set_texture(tex_pointer texture_);
 
   protected:
     /************************************************************************

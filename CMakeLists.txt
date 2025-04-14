@@ -14,7 +14,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 endif()
 
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release)
+  set(CMAKE_BUILD_TYPE Debug)
 endif()
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${PLATFORM_NAME}) 
@@ -28,6 +28,7 @@ set(SOURCES
     src/camera.cpp
     src/frame.cpp
     src/renderer.cpp
+    src/texture.cpp
     src/scene_generator.cpp
 )
 

@@ -1,7 +1,7 @@
 #include "objects.h"
 #include "material.h"
 #include "math.h"
-#include <iostream>
+#include "texture.h"
 #include <memory>
 
 IntersectionOut::IntersectionOut()
@@ -25,6 +25,13 @@ IntersectionOut AbstractShape::intersect(const Ray &ray) {
     intsec_out.hit_mat = material;
     intsec_out.t = (intsec_out.point - ray.origin).length();
     intsec_out.w0 = ray;
+
+    if (this->texture)
+        intsec_out.uv_dat =
+            this->texture->uv(intsec_out.uv.first, intsec_out.uv.second);
+    else
+        intsec_out.uv_dat = Vec3(1, 1, 1);
+
     return intsec_out;
 }
 
@@ -33,6 +40,8 @@ Vec3 AbstractShape::get_normal(const Vec3 &point) {
     Vec3 frame_normal = this->_get_normal(frame_point);
     return transpose(frame.worldToFrame) & frame_normal;
 }
+
+void AbstractShape::set_texture(tex_pointer texture_) { texture = texture_; }
 
 Triangle::Triangle(Vec3 v1, Vec3 v2, Vec3 v3, mat_pointer mat)
     : v1(v1), v2(v2), v3(v3) {
@@ -72,6 +81,7 @@ bool Triangle::_intersect(const Ray &ray, IntersectionOut &intersect_out) {
     intersect_out.normal = this->n;
     intersect_out.t = lambda;
     intersect_out.point = intersection_point;
+    intersect_out.uv = {a[0], a[1]};
     return lambda > 0;
 }
 
@@ -87,8 +97,7 @@ bool Sphere::_intersect(const Ray &ray, IntersectionOut &intersect_out) {
     Vec3 L = this->c - ray.origin;
     float tca = dot(L, ray.direction);
 
-
-    float d2 =  dot(L, L) - tca * tca;
+    float d2 = dot(L, L) - tca * tca;
 
     if (d2 > r * r)
         return false;
@@ -108,7 +117,7 @@ bool Sphere::_intersect(const Ray &ray, IntersectionOut &intersect_out) {
 
 Vec3 Sphere::_get_normal(const Vec3 &point) {
     Vec3 ret = point - this->c;
-    return ret/r;
+    return ret / r;
 }
 Plane::Plane(Vec3 normal, Vec3 point, mat_pointer mat) : n(normal), p(point) {
     material = mat;

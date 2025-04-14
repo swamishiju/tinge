@@ -2,22 +2,26 @@
 #include "objects.h"
 #include "renderer.h"
 #include "scene_generator.h"
+#include "texture.h"
 #include <chrono>
 #include <iostream>
 #include <time.h>
 
-#define WIDTH 192*2
-#define HEIGHT 108*2
+#define WIDTH 1920
+#define HEIGHT 1080
 
 int main() {
     std::cout << "Hello there!" << std::endl;
-  
-    Camera camera = Camera(M_PI_2, WIDTH, HEIGHT, 10, 0.3);
-    camera.look_at(Vec3(1, 1, 0), Vec3(0, 0, -5));
+
+    Camera camera = Camera(2, WIDTH, HEIGHT, 1, 0);
+    camera.frame.rotation.x = -M_PI / 5;
+    camera.frame.origin.y = 0.4;
+    camera.frame.lockFrame();
 
     std::vector<obj_pointer> shapes;
     // Populate scene
     generate_scene(shapes);
+    /*Texture t = Texture("test.png");*/
 
     // Begin timer and start render
     auto start = std::chrono::high_resolution_clock::now();
