@@ -38,7 +38,7 @@ void generate_scene(std::vector<obj_pointer> &shapes) {
     t3->frame.lockFrame();
     t4->frame.lockFrame();
 
-    tex_pointer b = std::make_shared<Texture>("pre_uv.png");
+    tex_pointer b = std::make_shared<Texture>("pre-uv.png");
 
     t4->set_texture(b);
 
